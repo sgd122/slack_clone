@@ -4,24 +4,48 @@ import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const SignUp = () => {
-  const [email] = useState('');
-  const [nickname] = useState('');
-  const [password] = useState('');
-  const [passwordCheck] = useState('');
-  const [mismatchError] = useState(false);
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [mismatchError, setMismatchError] = useState(false);
   const [signUpError] = useState('');
   const [signUpSuccess] = useState(false);
-  const onSubmit = useCallback(() => {
-    console.log('submit');
+
+  const onChangeEmail = useCallback((e) => {
+    setEmail(e.target.value);
   }, []);
-  const onChangePassword = useCallback(() => {
-    console.log('onChangePassword');
+
+  const onChangeNickname = useCallback((e) => {
+    setNickname(e.target.value);
   }, []);
-  const onChangePasswordCheck = useCallback(() => {
-    console.log('onChangePasswordCheck');
-  }, []);
-  const onChangeEmail = useCallback(() => {}, []);
-  const onChangeNickname = useCallback(() => {}, []);
+
+  const onChangePassword = useCallback(
+    (e) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value !== passwordCheck);
+    },
+    [passwordCheck],
+  );
+
+  const onChangePasswordCheck = useCallback(
+    (e) => {
+      setPasswordCheck(e.target.value);
+      setMismatchError(e.target.value !== password);
+    },
+    [password],
+  );
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (!mismatchError) {
+        console.log('회원가입 실행');
+      }
+    },
+    [email, nickname, password, passwordCheck, mismatchError],
+  );
+
   return (
     <div id="container">
       <Header>Slack Clone</Header>
