@@ -1,14 +1,13 @@
-import * as webpack from 'webpack';
-
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import path from 'path';
+import webpack from 'webpack';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config: webpack.Configuration = {
-  name: 'slack_clone',
+  name: 'sleact',
   mode: isDevelopment ? 'development' : 'production',
   devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
   resolve: {
