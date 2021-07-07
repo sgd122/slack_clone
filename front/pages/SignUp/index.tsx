@@ -24,7 +24,7 @@ const SignUp = () => {
   const onChangeNickname = useCallback(() => {}, []);
   return (
     <div id="container">
-      <Header>Sleact</Header>
+      <Header>Slack Clone</Header>
       <Form onSubmit={onSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>
