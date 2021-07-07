@@ -2,6 +2,7 @@ import { Button, Error, Form, Header, Input, Label, LinkContainer, Success } fro
 import React, { useCallback, useState } from 'react';
 
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import useInput from '@hooks/useInput';
 
 const SignUp = () => {
@@ -11,8 +12,8 @@ const SignUp = () => {
   const [passwordCheck, , setPasswordCheck] = useInput('');
 
   const [mismatchError, setMismatchError] = useState(false);
-  const [signUpError] = useState('');
-  const [signUpSuccess] = useState(false);
+  const [signUpError, setSignUpError] = useState('');
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const onChangePassword = useCallback(
     (e) => {
@@ -35,6 +36,23 @@ const SignUp = () => {
       e.preventDefault();
       if (!mismatchError) {
         console.log('회원가입 실행');
+        setSignUpSuccess(false);
+        setSignUpError('');
+        axios
+          .post('/api/users/', {
+            email,
+            nickname,
+            password,
+          })
+          .then((response) => {
+            console.log(response);
+            setSignUpSuccess(true);
+          })
+          .catch((error) => {
+            console.log(error.response);
+            setSignUpError(error.response.data);
+          })
+          .finally(() => {});
       }
     },
     [email, nickname, password, passwordCheck, mismatchError],
