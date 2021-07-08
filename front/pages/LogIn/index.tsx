@@ -26,7 +26,7 @@ const LogIn = () => {
           },
         )
         .then((response) => {
-          revalidate();
+          mutate(response.data, false);
         })
         .catch((error) => {
           setLogInError(error.response?.data?.statusCode === 401);
@@ -51,7 +51,7 @@ const LogIn = () => {
 
   return (
     <div id="container">
-      <Header>Sleact</Header>
+      <Header>Slack Clone</Header>
       <Form onSubmit={onSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>
