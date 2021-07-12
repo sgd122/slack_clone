@@ -14,11 +14,11 @@ import {
   Workspaces,
 } from './styles';
 import { Button, Input, Label } from '@pages/SignUp/styles';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { IChannel, IUser } from '@typings/db';
+import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
 import React, { VFC, useCallback, useState } from 'react';
 
 import CreateChannelModal from '@components/CreateChannelModal';
-import { IUser } from '@typings/db';
 import Menu from '@components/Menu';
 import Modal from '@components/Modal';
 import { WorkspaceButton } from './styles';
@@ -38,10 +38,13 @@ const Workspace: VFC = () => {
   const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
+
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
 
+  const { workspace } = useParams<{ workspace: string }>();
   const { data: userData, error, revalidate, mutate } = useSWR<IUser | false>('/api/users', fetcher);
+  const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
   const onLogout = useCallback(() => {
     axios
@@ -65,6 +68,7 @@ const Workspace: VFC = () => {
   const onClickCreateWorkspace = useCallback(() => {
     setShowCreateWorkspaceModal(true);
   }, []);
+
   const onCreateWorkspace = useCallback(
     (e) => {
       e.preventDefault();
@@ -154,12 +158,15 @@ const Workspace: VFC = () => {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
+            {channelData?.map((v) => (
+              <div>{v.name}</div>
+            ))}
           </MenuScroll>
         </Channels>
         <Chats>
           <Switch>
-            <Route path={'/workspace/sleact/channel/일반'} component={Channel} />
-            <Route path={'/workspace/dm'} component={DirectMessage} />
+            <Route path={'/workspace/:workspace/channel/:channel'} component={Channel} />
+            <Route path={'/workspace/:workspace/dm/:id'} component={DirectMessage} />
           </Switch>
         </Chats>
       </WorkspaceWrapper>
