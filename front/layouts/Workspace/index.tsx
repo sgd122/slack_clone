@@ -17,9 +17,10 @@ import { IChannel, IUser } from '@typings/db';
 import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
 import React, { VFC, useCallback, useState } from 'react';
 
+import ChannelList from '@components/ChannelList';
 import CreateChannelModal from '@components/CreateChannelModal';
 import CreateWorkspaceModal from '@components/CreateWorkspaceModal';
-import InviteChannelModal from '@components/InviteChannelModal';
+import DMList from '@components/DMList';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import Menu from '@components/Menu';
 import { WorkspaceButton } from './styles';
@@ -38,11 +39,11 @@ const Workspace: VFC = () => {
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
   const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
-  const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
 
   const { workspace } = useParams<{ workspace: string }>();
   const { data: userData, error, revalidate, mutate } = useSWR<IUser | false>('/api/users', fetcher);
   const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
+  const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
 
   const onLogout = useCallback(() => {
     axios
@@ -71,7 +72,6 @@ const Workspace: VFC = () => {
     setShowCreateWorkspaceModal(false);
     setShowCreateChannelModal(false);
     setShowInviteWorkspaceModal(false);
-    setShowInviteChannelModal(false);
   }, []);
 
   const toggleWorkspaceModal = useCallback(() => {
@@ -116,7 +116,7 @@ const Workspace: VFC = () => {
       {/* SECTION: Workspace */}
       <WorkspaceWrapper>
         <Workspaces>
-          {userData.Workspaces.map((ws) => {
+          {userData.Workspaces?.map((ws) => {
             return (
               <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
@@ -136,9 +136,8 @@ const Workspace: VFC = () => {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
-            {channelData?.map((v) => (
-              <div>{v.name}</div>
-            ))}
+            <ChannelList />
+            <DMList />
           </MenuScroll>
         </Channels>
         <Chats>
@@ -164,11 +163,6 @@ const Workspace: VFC = () => {
         show={showInviteWorkspaceModal}
         onCloseModal={onCloseModal}
         setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
-      />
-      <InviteChannelModal
-        show={showInviteChannelModal}
-        onCloseModal={onCloseModal}
-        setShowInviteChannelModal={setShowInviteChannelModal}
       />
     </div>
   );
