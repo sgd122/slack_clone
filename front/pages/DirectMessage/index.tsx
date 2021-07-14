@@ -1,11 +1,11 @@
 import { Container, Header } from '@pages/DirectMessage/styles';
+import { IDM, IUser } from '@typings/db';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR, { useSWRInfinite } from 'swr';
 
 import ChatBox from '@components/ChatBox';
 import ChatList from '@components/ChatList';
 import { DragOver } from '@pages/Channel/styles';
-import { IDM } from '@typings/db';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import axios from 'axios';
 import fetcher from '@utils/fetcher';
@@ -22,6 +22,8 @@ const DirectMessage = () => {
   const [socket] = useSocket(workspace);
   const { data: myData } = useSWR('/api/users', fetcher);
   const { data: userData } = useSWR(`/api/workspaces/${workspace}/users/${id}`, fetcher);
+  const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
+
   const {
     data: chatData,
     mutate: mutateChat,
@@ -184,7 +186,7 @@ const DirectMessage = () => {
         chat={chat}
         onChangeChat={onChangeChat}
         placeholder={`Message ${userData.nickname}`}
-        data={[]}
+        data={memberData}
       />
       {dragOver && <DragOver>업로드!</DragOver>}
     </Container>
