@@ -15,3 +15,12 @@
 8. npm run dev
 9. localhost:3095에서 서버 돌아가는 중
 10. 백엔드 개발자가 API.md와 typings/db.ts를 남겨둔 상황
+
+# front -> backend
+
+```markdown
+front/public -> backend/public/public
+front/dist -> backend/public/dist
+front/index.html -> backend/public/index.html
+front/favicon.ico -> backend/public/favicon.ico
+```
