@@ -16,7 +16,7 @@
 9. localhost:3095에서 서버 돌아가는 중
 10. 백엔드 개발자가 API.md와 typings/db.ts를 남겨둔 상황
 
-# front -> backend
+# production 환경구성 (front -> backend)
 
 ```markdown
 front/public -> backend/public/public
