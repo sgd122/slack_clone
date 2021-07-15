@@ -12,7 +12,7 @@ interface Props {
   data: IDM | IChat;
 }
 
-const BACK_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3095' : 'https://sleact.nodebird.com';
+const BACK_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3095' : 'http://3.36.99.186';
 const Chat: FC<Props> = memo(({ data }) => {
   const { workspace } = useParams<{ workspace: string; channel: string }>();
   const user: IUser = 'Sender' in data ? data.Sender : data.User;
